@@ -8,12 +8,15 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-flow-renderer": "^10.3.14",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "wasm-parser": "file:./wasm-parser/wasm-build"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:wasm": "cd wasm-parser && wasm-pack build --target web --out-dir ./wasm-build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
