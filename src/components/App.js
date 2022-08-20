@@ -25,6 +25,18 @@ const nodeTypes = { containerNode: ContainerNode };
 
 let nodeId = 0;
 
+function preprocessNode(obj) {
+  let moddedNode = {};
+  Object.keys(obj).forEach((key) => {
+    if (key === "type") {
+      moddedNode["nodeType"] = obj[key];
+    } else {
+      moddedNode[key] = obj[key];
+    }
+  });
+  return moddedNode;
+}
+
 function Flow() {
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState(initialEdges);
@@ -61,17 +73,16 @@ function Flow() {
     reactFlowInstance.addNodes(newNode);
   }, []);
 
-  const onClickRemoveNode = (_) => {
-    const selectedNode = nodes.filter((nd) => nd.selected)[0];
-    console.log(selectedNode);
-    if (selectedNode !== null) {
-      setNodes((nds) => nds.filter((val) => val.id !== selectedNode.id));
+  const onClickRemoveNode = (event) => {
+    const selectedNode = nodes.filter((nd) => nd.selected);
+    if (selectedNode.length !== 0) {
+      setNodes((nds) => nds.filter((val) => val.id !== selectedNode.id[0]));
     }
   };
 
   const onClickSubmit = (_) => {
-    const stringified = JSON.stringify(nodes);
-    console.log("Rust\n");
+    const mod_nodes = nodes.map((nd) => preprocessNode(nd));
+    const stringified = JSON.stringify(mod_nodes);
     init().then(() => {
       const rusty_str = print_string(stringified);
       console.log(rusty_str);
