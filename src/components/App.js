@@ -8,7 +8,7 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
-  MarkerType
+  MarkerType,
 } from "react-flow-renderer";
 import Button from "@mui/material/Button";
 
@@ -19,6 +19,7 @@ import PortEdge from "./PortEdge.js";
 import initialNodes from "./InitialNodes.js";
 // UI promps
 import NodeCreatePrompt from "./NodeCreatePrompt.js";
+import EdgeCreatePrompt from "./EdgeCreatePrompt.js";
 
 import "./button.css";
 import init, { print_string } from "wasm-parser";
@@ -27,7 +28,7 @@ const edgeOptions = {
   animated: false,
   style: {
     stroke: "black",
-  }
+  },
 };
 
 const nodeTypes = { containerNode: ContainerNode, hostNode: HostNode };
@@ -48,42 +49,25 @@ function preprocessNode(obj) {
 function Flow() {
   const reactFlowInstance = useReactFlow();
 
+  // Entity States
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState([]);
-  const [open, setOpen] = useState(false);
+  const [openNodePrompt, setOpenNodePrompt] = useState(false);
+  const [openEdgePrompt, setOpenEdgePrompt] = useState(false);
+  const [portSettings, setPortSettings] = useState({
+    containerPort: "",
+    hostPort: "",
+  });
 
   // Dialog hooks
-  const handleCloseDialog = () => {
-    setOpen(false);
+  const handleCloseNodeDialog = () => {
+    setOpenNodePrompt(false);
   };
-
-  // React Flow hooks
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
-  );
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
-    [setEdges]
-  );
-  const onConnect = useCallback(
-    (params) => {
-      setEdges((eds) => {
-        if (params.source === "localhost" || params.target === "localhost") {
-          params["type"] = "portEdge";
-          params["data"] = {
-            containerPort: "9000",
-            hostPort: "9000"
-          }
-        }
-        return addEdge(params, eds);
-      });
-    },
-    [setEdges]
-  );
-
-  const onClickOpenDialog = () => {
-    setOpen(true);
+  const handleCloseEdgeDialog = () => {
+    setOpenEdgePrompt(false);
+  };
+  const onClickOpenNodeDialog = () => {
+    setOpenNodePrompt(true);
   };
 
   const onClickAddNode = useCallback((containerName, serviceName) => {
@@ -101,6 +85,37 @@ function Flow() {
     };
     reactFlowInstance.addNodes(newNode);
   }, []);
+
+  const onClickAddHostEdge = useCallback((conPort, hPort) => {
+    setPortSettings({
+      containerPort: conPort,
+      hostPort: hPort,
+    });
+  });
+
+  // React Flow hooks
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [setNodes]
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
+    [setEdges]
+  );
+  const onConnect = useCallback(
+    (params) => {
+      setEdges((eds) => {
+        // Setting the ports if connected to local host
+        if (params.source === "localhost" || params.target === "localhost") {
+          setOpenEdgePrompt(true);
+          params["type"] = "portEdge";
+          params["data"] = portSettings;
+        }
+        return addEdge(params, eds);
+      });
+    },
+    [setEdges]
+  );
 
   const onClickRemoveNode = (_) => {
     const selectedNode = nodes.filter((nd) => nd.selected);
@@ -128,7 +143,6 @@ function Flow() {
         style={{
           backgroundColor: "#D3D2E5",
         }}
-        snapToGrid={true}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         edgeTypes={edgeTypes}
@@ -141,7 +155,7 @@ function Flow() {
       <Button
         variant="contained"
         className="btn-add"
-        onClick={onClickOpenDialog}
+        onClick={onClickOpenNodeDialog}
       >
         Add Node
       </Button>
@@ -156,9 +170,14 @@ function Flow() {
         Compose
       </Button>
       <NodeCreatePrompt
-        open={open}
+        open={openNodePrompt}
         setValue={onClickAddNode}
-        handleClose={handleCloseDialog}
+        handleClose={handleCloseNodeDialog}
+      />
+      <EdgeCreatePrompt
+        open={openEdgePrompt}
+        setValue={onClickAddHostEdge}
+        handleClose={handleCloseEdgeDialog}
       />
     </>
   );
