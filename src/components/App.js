@@ -2,28 +2,36 @@ import { useCallback, useState } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   Background,
+  MiniMap,
+  Controls,
   useReactFlow,
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
+  MarkerType
 } from "react-flow-renderer";
+import Button from "@mui/material/Button";
+
+// Entities
 import ContainerNode from "./ContainerNode.js";
+import HostNode from "./HostNode.js";
+import PortEdge from "./PortEdge.js";
 import initialNodes from "./InitialNodes.js";
-import initialEdges from "./InitialEdges.js";
+// UI promps
+import NodeCreatePrompt from "./NodeCreatePrompt.js";
 
 import "./button.css";
 import init, { print_string } from "wasm-parser";
 
 const edgeOptions = {
-  animated: true,
+  animated: false,
   style: {
-    stroke: "white",
-  },
+    stroke: "black",
+  }
 };
 
-const nodeTypes = { containerNode: ContainerNode };
-
-let nodeId = 0;
+const nodeTypes = { containerNode: ContainerNode, hostNode: HostNode };
+const edgeTypes = { portEdge: PortEdge };
 
 function preprocessNode(obj) {
   let moddedNode = {};
@@ -38,27 +46,48 @@ function preprocessNode(obj) {
 }
 
 function Flow() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const reactFlowInstance = useReactFlow();
 
+  const [nodes, setNodes] = useState(initialNodes);
+  const [edges, setEdges] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  // Dialog hooks
+  const handleCloseDialog = () => {
+    setOpen(false);
+  };
+
+  // React Flow hooks
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]
   );
-
   const onEdgesChange = useCallback(
     (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
-    []
+    [setEdges]
   );
-
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params) => {
+      setEdges((eds) => {
+        if (params.source === "localhost" || params.target === "localhost") {
+          params["type"] = "portEdge";
+          params["data"] = {
+            containerPort: "9000",
+            hostPort: "9000"
+          }
+        }
+        return addEdge(params, eds);
+      });
+    },
     [setEdges]
   );
 
-  const reactFlowInstance = useReactFlow();
-  const addNode = useCallback(() => {
-    const id = `${++nodeId}`;
+  const onClickOpenDialog = () => {
+    setOpen(true);
+  };
+
+  const onClickAddNode = useCallback((containerName, serviceName) => {
+    const id = containerName;
     const newNode = {
       id,
       position: {
@@ -66,17 +95,17 @@ function Flow() {
         y: Math.random() * 500,
       },
       data: {
-        label: `Node ${id}`,
+        label: serviceName,
       },
       type: "containerNode",
     };
     reactFlowInstance.addNodes(newNode);
   }, []);
 
-  const onClickRemoveNode = (event) => {
+  const onClickRemoveNode = (_) => {
     const selectedNode = nodes.filter((nd) => nd.selected);
     if (selectedNode.length !== 0) {
-      setNodes((nds) => nds.filter((val) => val.id !== selectedNode.id[0]));
+      setNodes((nds) => nds.filter((val) => val.id !== selectedNode[0].id));
     }
   };
 
@@ -99,21 +128,38 @@ function Flow() {
         style={{
           backgroundColor: "#D3D2E5",
         }}
+        snapToGrid={true}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        edgeTypes={edgeTypes}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
       />
+      <MiniMap />
+      <Controls />
       <Background />
-      <button onClick={addNode} className="btn-add">
-        Add node
-      </button>
-      <button onClick={onClickRemoveNode} className="btn-remove">
-        Remove node
-      </button>
-      <button onClick={onClickSubmit} className="btn-submit">
+      <Button
+        variant="contained"
+        className="btn-add"
+        onClick={onClickOpenDialog}
+      >
+        Add Node
+      </Button>
+      <Button
+        variant="contained"
+        className="btn-add"
+        onClick={onClickRemoveNode}
+      >
+        Remove Node
+      </Button>
+      <Button variant="contained" className="btn-add" onClick={onClickSubmit}>
         Compose
-      </button>
+      </Button>
+      <NodeCreatePrompt
+        open={open}
+        setValue={onClickAddNode}
+        handleClose={handleCloseDialog}
+      />
     </>
   );
 }

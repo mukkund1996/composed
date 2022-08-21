@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.10.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,8 +14,8 @@
     "react-dom": "^18.2.0",
     "react-flow-renderer": "^10.3.14",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "wasm-parser": "file:./wasm-parser/wasm-build"
+    "wasm-parser": "file:./wasm-parser/wasm-build",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

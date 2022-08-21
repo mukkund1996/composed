@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
-use crate::model::{Node, Service, DockerCompose};
+use crate::model::{Node, Service, DockerCompose, LOCALHOST_ID};
 
 //  Deserializes the nodes and converts it into a vector of strings
 fn parse_nodes(data: &String) -> Vec<Node> {
@@ -13,6 +13,9 @@ fn parse_nodes(data: &String) -> Vec<Node> {
 fn generate_dockercompose_yml(nodes: Vec<Node>) -> DockerCompose {
     let mut service_map: HashMap<String, Service> = HashMap::new();
     for node in nodes {
+        if node.id == LOCALHOST_ID{
+            continue;
+        }
         service_map.insert(
             node.data.label.clone(),
             Service {
@@ -62,9 +65,9 @@ mod tests {
     fn test_generate_dockercompose_yml() {
         let nodes = vec![
             Node {
-                id: String::from("a"),
+                id: String::from("localhost"),
                 data: NodeData {
-                    label: String::from("Node A"),
+                    label: String::from("host-node"),
                 },
                 position: NodePosition { x: 250.0, y: 25.0 },
                 height: 62.0,
@@ -74,7 +77,7 @@ mod tests {
             Node {
                 id: String::from("b"),
                 data: NodeData {
-                    label: String::from("Node B"),
+                    label: String::from("node-B"),
                 },
                 position: NodePosition { x: 300.0, y: 25.0 },
                 height: 62.0,
@@ -83,12 +86,10 @@ mod tests {
             },
         ];
         let mut services = HashMap::new();
-        for node in nodes.clone(){
-            services.insert(node.data.label, Service {
-                image: node.id,
-                ports: vec![String::from("9000:9000")]
-            });
-        }
+        services.insert(String::from("node-B"), Service {
+            image: String::from("b"),
+            ports: vec![String::from("9000:9000")]
+        });
         let expected_yml = DockerCompose {
             version: String::from("3.9"),
             services: services,

@@ -5,6 +5,8 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
+pub const LOCALHOST_ID: &str = "localhost";
+
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct NodeData {

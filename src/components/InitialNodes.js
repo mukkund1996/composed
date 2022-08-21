@@ -1,23 +1,16 @@
 const initialNodes = [
   {
-    id: "a",
-    type: "containerNode",
-    data: { label: "Node A" },
+    id: "localhost",
+    type: "hostNode",
+    data: { label: "Local Host" },
     position: { x: 250, y: 25 },
   },
-
   {
-    id: "b",
+    id: "service-1",
     type: "containerNode",
-    data: { label: "Node B" },
-    position: { x: 100, y: 125 },
-  },
-  {
-    id: "c",
-    type: "containerNode",
-    data: { label: "Node C" },
-    position: { x: 250, y: 250 },
-  },
+    data: { label: "image-1" },
+    position: { x: 400, y: 150 },
+  }
 ];
 
 export default initialNodes;
