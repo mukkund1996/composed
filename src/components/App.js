@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   Background,
@@ -8,7 +8,6 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
-  MarkerType,
 } from "react-flow-renderer";
 import Button from "@mui/material/Button";
 
@@ -58,6 +57,7 @@ function Flow() {
     containerPort: "",
     hostPort: "",
   });
+  const [hostEdge, setHostEdge] = useState(null);
 
   // Dialog hooks
   const handleCloseNodeDialog = () => {
@@ -84,14 +84,23 @@ function Flow() {
       type: "containerNode",
     };
     reactFlowInstance.addNodes(newNode);
-  }, []);
+  }, [reactFlowInstance]);
 
-  const onClickAddHostEdge = useCallback((conPort, hPort) => {
+  const onClickUpdateHostEdge = useCallback((conPort, hPort) => {
     setPortSettings({
       containerPort: conPort,
       hostPort: hPort,
     });
   });
+
+  const onClickAddHostEdge = useEffect(() => {
+    if (hostEdge){
+      setEdges((eds) => addEdge(
+        {type: "portEdge", data: portSettings, ...hostEdge},
+        eds
+      ));
+    }
+  }, [portSettings]);
 
   // React Flow hooks
   const onNodesChange = useCallback(
@@ -108,10 +117,11 @@ function Flow() {
         // Setting the ports if connected to local host
         if (params.source === "localhost" || params.target === "localhost") {
           setOpenEdgePrompt(true);
-          params["type"] = "portEdge";
-          params["data"] = portSettings;
+          setHostEdge(params);
+          return eds;
+        } else {
+          return addEdge(params, eds);
         }
-        return addEdge(params, eds);
       });
     },
     [setEdges]
@@ -176,7 +186,7 @@ function Flow() {
       />
       <EdgeCreatePrompt
         open={openEdgePrompt}
-        setValue={onClickAddHostEdge}
+        setValue={onClickUpdateHostEdge}
         handleClose={handleCloseEdgeDialog}
       />
     </>

@@ -32,6 +32,16 @@ pub struct Node {
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct Edge {
+    pub id: String,
+    pub source: String,
+    pub target: String,
+    pub container_port: Option<i32>,
+    pub host_port: Option<i32>
+}
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Service {
     pub image: String,
     pub ports: Vec<String>

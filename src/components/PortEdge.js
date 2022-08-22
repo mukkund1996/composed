@@ -2,7 +2,7 @@ import React from 'react';
 import { getBezierPath } from 'react-flow-renderer';
 
 const textPathStyles = { 
-    fontSize: '10px', 
+    fontSize: '7px', 
     fontWeight: 'bold',
   }
 
