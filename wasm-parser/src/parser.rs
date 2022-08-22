@@ -114,6 +114,22 @@ mod tests {
                 node_type: String::from("containerNode"),
             },
         ];
+        let edges = vec![
+            Edge {
+                id: String::from("edge1"),
+                source: String::from("nd1"),
+                target: String::from("nd2"),
+                container_port: Some(9000),
+                host_port: Some(9000),
+            },
+            Edge {
+                id: String::from("edge2"),
+                source: String::from("nd2"),
+                target: String::from("nd3"),
+                container_port: None,
+                host_port: None,
+            }
+        ];
         let mut services = HashMap::new();
         services.insert(
             String::from("node-B"),
@@ -127,6 +143,6 @@ mod tests {
             services: services,
         };
 
-        assert_eq!(expected_yml, super::generate_dockercompose_yml(nodes));
+        assert_eq!(expected_yml, super::generate_dockercompose_yml(nodes, edges));
     }
 }
