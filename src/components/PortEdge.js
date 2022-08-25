@@ -1,10 +1,10 @@
-import React from 'react';
-import { getBezierPath } from 'react-flow-renderer';
+import React from "react";
+import { getBezierPath } from "react-flow-renderer";
 
-const textPathStyles = { 
-    fontSize: '7px', 
-    fontWeight: 'bold',
-  }
+const textPathStyles = {
+  fontSize: "7px",
+  fontWeight: "bold",
+};
 
 const PortEdge = ({
   id,
@@ -43,7 +43,7 @@ const PortEdge = ({
           startOffset="15%"
           textAnchor="top"
         >
-          {data.containerPort}
+          {data.hostPort}
         </textPath>
         <textPath
           href={`#${id}`}
@@ -51,11 +51,11 @@ const PortEdge = ({
           startOffset="85%"
           textAnchor="middle"
         >
-          {data.hostPort}
+          {data.containerPort}
         </textPath>
       </text>
     </>
   );
-}
+};
 
 export default PortEdge;

@@ -31,16 +31,16 @@ const EdgeCreatePrompt = ({ open, setValue, handleClose }) => {
   return (
     <Dialog open={open}>
       <TextField
-        id="container-port"
-        label="Container Port"
-        variant="outlined"
-        onChange={handleContainerPort}
-      />
-      <TextField
         id="host-port"
         label="Host Port"
         variant="outlined"
         onChange={handleHostPort}
+      />
+      <TextField
+        id="container-port"
+        label="Container Port"
+        variant="outlined"
+        onChange={handleContainerPort}
       />
       <Button variant="contained" onClick={onClickCreate}>
         Create Edge

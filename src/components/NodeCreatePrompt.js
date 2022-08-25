@@ -31,16 +31,16 @@ const NodeCreatePrompt = ({ open, setValue, handleClose }) => {
   return (
     <Dialog open={open}>
       <TextField
-        id="image-name"
-        label="Image Name"
-        variant="outlined"
-        onChange={handleContainerName}
-      />
-      <TextField
         id="service-name"
         label="Service Name"
         variant="outlined"
         onChange={handleServiceName}
+      />
+      <TextField
+        id="image-name"
+        label="Image Name"
+        variant="outlined"
+        onChange={handleContainerName}
       />
       <Button variant="contained" onClick={onClickCreate}>
         Create

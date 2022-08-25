@@ -22,11 +22,43 @@ fn generate_dockercompose_yml(nodes: Vec<Node>, edges: Vec<Edge>) -> DockerCompo
         if node.id == LOCALHOST_ID {
             continue;
         }
+
+        let host_edges: Vec<&Edge> = edges
+            .iter()
+            .filter(|edge| node.id == edge.source || node.id == edge.target)
+            .filter(|edge| edge.source == LOCALHOST_ID || edge.target == LOCALHOST_ID)
+            .collect();
+
+        let mut container_port: i32 = 9000;
+        let mut host_port: i32 = 9000;
+        if host_edges.len() == 1 {
+            container_port = host_edges
+                .first()
+                .unwrap()
+                .data
+                .as_ref()
+                .unwrap()
+                .container_port
+                .clone()
+                .parse::<i32>()
+                .unwrap();
+            host_port = host_edges
+                .first()
+                .unwrap()
+                .data
+                .as_ref()
+                .unwrap()
+                .host_port
+                .clone()
+                .parse::<i32>()
+                .unwrap();
+        }
+
         service_map.insert(
             node.data.label.clone(),
             Service {
                 image: node.id.clone(),
-                ports: vec![String::from("9000:9000")],
+                ports: vec![String::from(format!("{}:{}", host_port, container_port))],
             },
         );
     }
@@ -49,27 +81,28 @@ pub fn print_string(node_data: String, edge_data: String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::model::{DockerCompose, Node, NodeData, NodePosition, Service, Edge};
+    use crate::model::{DockerCompose, Edge, EdgeSpec, Node, NodeData, NodePosition, Service};
     use std::collections::HashMap;
 
     #[test]
-    fn test_parse_edges(){
-        let test_string = String::from("[{\"id\": \"edge1\", \"source\": \"nd1\", \"target\": \"nd2\", \"containerPort\": 9000, \"hostPort\": 9000},{\"id\": \"edge2\", \"source\": \"nd2\", \"target\": \"nd3\", \"containerPort\": null, \"hostPort\": null}]");
+    fn test_parse_edges() {
+        let test_string = String::from("[{\"id\": \"edge1\", \"source\": \"nd1\", \"target\": \"nd2\", \"data\": {\"containerPort\": \"9000\", \"hostPort\": \"9000\"}},{\"id\": \"edge2\", \"source\": \"nd2\", \"target\": \"nd3\", \"data\": null}]");
         let expected_edges = vec![
             Edge {
                 id: String::from("edge1"),
                 source: String::from("nd1"),
                 target: String::from("nd2"),
-                container_port: Some(9000),
-                host_port: Some(9000),
+                data: Some(EdgeSpec {
+                    container_port: String::from("9000"),
+                    host_port: String::from("9000"),
+                }),
             },
             Edge {
                 id: String::from("edge2"),
                 source: String::from("nd2"),
                 target: String::from("nd3"),
-                container_port: None,
-                host_port: None,
-            }
+                data: None,
+            },
         ];
         assert_eq!(super::parse_edges(&test_string), expected_edges);
     }
@@ -117,25 +150,26 @@ mod tests {
         let edges = vec![
             Edge {
                 id: String::from("edge1"),
-                source: String::from("nd1"),
-                target: String::from("nd2"),
-                container_port: Some(9000),
-                host_port: Some(9000),
+                source: String::from("localhost"),
+                target: String::from("b"),
+                data: Some(EdgeSpec {
+                    container_port: String::from("9000"),
+                    host_port: String::from("7000"),
+                }),
             },
             Edge {
                 id: String::from("edge2"),
-                source: String::from("nd2"),
+                source: String::from("b"),
                 target: String::from("nd3"),
-                container_port: None,
-                host_port: None,
-            }
+                data: None,
+            },
         ];
         let mut services = HashMap::new();
         services.insert(
             String::from("node-B"),
             Service {
                 image: String::from("b"),
-                ports: vec![String::from("9000:9000")],
+                ports: vec![String::from("7000:9000")],
             },
         );
         let expected_yml = DockerCompose {
@@ -143,6 +177,9 @@ mod tests {
             services: services,
         };
 
-        assert_eq!(expected_yml, super::generate_dockercompose_yml(nodes, edges));
+        assert_eq!(
+            expected_yml,
+            super::generate_dockercompose_yml(nodes, edges)
+        );
     }
 }

@@ -135,10 +135,11 @@ function Flow() {
   };
 
   const onClickSubmit = (_) => {
-    const mod_nodes = nodes.map((nd) => preprocessNode(nd));
-    const stringified = JSON.stringify(mod_nodes);
+    const modNodes = nodes.map((nd) => preprocessNode(nd));
+    const stringifiedNodes = JSON.stringify(modNodes);
+    const stringifiedEdges = JSON.stringify(edges);
     init().then(() => {
-      const rusty_str = print_string(stringified);
+      const rusty_str = print_string(stringifiedNodes, stringifiedEdges);
       console.log(rusty_str);
     });
   };

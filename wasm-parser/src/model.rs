@@ -37,9 +37,16 @@ pub struct Edge {
     pub id: String,
     pub source: String,
     pub target: String,
-    pub container_port: Option<i32>,
-    pub host_port: Option<i32>
+    pub data: Option<EdgeSpec>
 }
+
+#[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct EdgeSpec {
+    pub container_port: String,
+    pub host_port: String
+}
+
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Service {
