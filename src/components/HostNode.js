@@ -9,7 +9,7 @@ function HostNode({ data }) {
         <ComputerIcon fontSize="large" />
         <label htmlFor="text">Host</label>
       </div>
-      <Handle type="source" position={Position.Right} id="b" />
+      <Handle type="source" position={Position.Bottom} id="b" />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
+  MarkerType,
 } from "react-flow-renderer";
 
 // MUI Components
@@ -17,11 +18,11 @@ import MuiAlert from "@mui/material/Alert";
 // Entities
 import ContainerNode from "./ContainerNode.js";
 import HostNode from "./HostNode.js";
-import PortEdge from "./PortEdge.js";
+import HostEdge from "./HostEdge.js";
 import initialNodes from "./InitialNodes.js";
 // UI promps
 import NodeCreatePrompt from "./NodeCreatePrompt.js";
-import EdgeCreatePrompt from "./EdgeCreatePrompt.js";
+import HostEdgeCreatePrompt from "./HostEdgeCreatePrompt.js";
 
 import "./button.css";
 import init, { print_string } from "wasm-parser";
@@ -38,7 +39,7 @@ const edgeOptions = {
 };
 
 const nodeTypes = { containerNode: ContainerNode, hostNode: HostNode };
-const edgeTypes = { portEdge: PortEdge };
+const edgeTypes = { portEdge: HostEdge };
 
 function preprocessNode(obj) {
   let moddedNode = {};
@@ -141,7 +142,16 @@ const ComposedFlow = () => {
           setHostEdge(params);
           return eds;
         } else {
-          return addEdge(params, eds);
+          // In the case of edges between 2 containers
+          params['animated'] = true;
+          const modEdge = {
+            animated: true,
+            label: "depends on",
+            labelStyle: { fill: 'blue', fontWeight: 500 },
+            ...params,
+          };
+
+          return addEdge(modEdge, eds);
         }
       });
     },
@@ -181,7 +191,7 @@ const ComposedFlow = () => {
         defaultEdgeOptions={edgeOptions}
         fitView
         style={{
-          backgroundColor: "#D3D2E5",
+          backgroundColor: "#FFFFFF",
         }}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -214,7 +224,7 @@ const ComposedFlow = () => {
         setValue={onClickAddNode}
         handleClose={handleCloseNodeDialog}
       />
-      <EdgeCreatePrompt
+      <HostEdgeCreatePrompt
         open={openEdgePrompt}
         setValue={onClickUpdateHostEdge}
         handleClose={handleCloseEdgeDialog}

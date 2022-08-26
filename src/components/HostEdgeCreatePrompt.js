@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
-const EdgeCreatePrompt = ({ open, setValue, handleClose }) => {
+const HostEdgeCreatePrompt = ({ open, setValue, handleClose }) => {
   const [containerPort, setContainerPort] = useState("");
   const [hostPort, setHostPort] = useState("");
 
@@ -52,4 +52,4 @@ const EdgeCreatePrompt = ({ open, setValue, handleClose }) => {
   );
 };
 
-export default EdgeCreatePrompt;
+export default HostEdgeCreatePrompt;

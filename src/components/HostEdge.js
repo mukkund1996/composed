@@ -6,7 +6,7 @@ const textPathStyles = {
   fontWeight: "bold",
 };
 
-const PortEdge = ({
+const HostEdge = ({
   id,
   sourceX,
   sourceY,
@@ -58,4 +58,4 @@ const PortEdge = ({
   );
 };
 
-export default PortEdge;
+export default HostEdge;
