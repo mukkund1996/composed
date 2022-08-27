@@ -3,6 +3,8 @@ use wasm_bindgen::prelude::*;
 
 use crate::model::{DockerCompose, Edge, Node, Service, LOCALHOST_ID};
 
+pub const INVALID_PORT: i32 = -9000;
+
 //  Deserializes the nodes and converts it into a vector of structs
 fn parse_nodes(data: &String) -> Vec<Node> {
     let nodes: Vec<Node> = serde_json::from_str(data).unwrap();
@@ -15,50 +17,79 @@ fn parse_edges(data: &String) -> Vec<Edge> {
     return edges;
 }
 
+fn _parse_ports(node: &Node, edges: &Vec<Edge>) -> Option<(i32, i32)> {
+    if node.id == LOCALHOST_ID {
+        return None;
+    }
+    let host_edges: Vec<&Edge> = edges
+        .iter()
+        .filter(|edge| node.id == edge.source || node.id == edge.target)
+        .filter(|edge| edge.source == LOCALHOST_ID || edge.target == LOCALHOST_ID)
+        .collect();
+
+    let mut container_port: i32 = 9000;
+    let mut host_port: i32 = 9000;
+    if host_edges.len() == 1 {
+        container_port = host_edges
+            .first()
+            .unwrap()
+            .data
+            .as_ref()
+            .unwrap()
+            .container_port
+            .clone()
+            .parse::<i32>()
+            .unwrap();
+        host_port = host_edges
+            .first()
+            .unwrap()
+            .data
+            .as_ref()
+            .unwrap()
+            .host_port
+            .clone()
+            .parse::<i32>()
+            .unwrap();
+    };
+    return Some((host_port, container_port));
+}
+
+fn _parse_dependencies(node: &Node, edges: &Vec<Edge>) -> Option<Vec<String>> {
+    if node.id == LOCALHOST_ID {
+        return None;
+    }
+    let mut dependency_vec: Vec<String> = vec![];
+    for edge in edges {
+        if node.id == edge.source {
+            dependency_vec.push(edge.target.clone());
+        }
+    }
+    Some(dependency_vec)
+}
+
 // Collects the nodes and serializes it into the docker-compose yaml
 fn generate_dockercompose_yml(nodes: Vec<Node>, edges: Vec<Edge>) -> DockerCompose {
     let mut service_map: HashMap<String, Service> = HashMap::new();
     for node in nodes {
-        if node.id == LOCALHOST_ID {
+        // Parsing port information from the local host edges
+        let ports = _parse_ports(&node, &edges);
+        let (host_port, container_port) = match ports {
+            Some((i, j)) => (i, j),
+            None => (INVALID_PORT, INVALID_PORT),
+        };
+        if host_port == INVALID_PORT {
             continue;
         }
 
-        let host_edges: Vec<&Edge> = edges
-            .iter()
-            .filter(|edge| node.id == edge.source || node.id == edge.target)
-            .filter(|edge| edge.source == LOCALHOST_ID || edge.target == LOCALHOST_ID)
-            .collect();
-
-        let mut container_port: i32 = 9000;
-        let mut host_port: i32 = 9000;
-        if host_edges.len() == 1 {
-            container_port = host_edges
-                .first()
-                .unwrap()
-                .data
-                .as_ref()
-                .unwrap()
-                .container_port
-                .clone()
-                .parse::<i32>()
-                .unwrap();
-            host_port = host_edges
-                .first()
-                .unwrap()
-                .data
-                .as_ref()
-                .unwrap()
-                .host_port
-                .clone()
-                .parse::<i32>()
-                .unwrap();
-        }
+        // Parsing dependency information for each container node
+        let dependency_vec = _parse_dependencies(&node, &edges);
 
         service_map.insert(
             node.data.label.clone(),
             Service {
                 image: node.id.clone(),
                 ports: vec![String::from(format!("{}:{}", host_port, container_port))],
+                depends_on: dependency_vec
             },
         );
     }
@@ -83,6 +114,8 @@ pub fn print_string(node_data: String, edge_data: String) -> String {
 mod tests {
     use crate::model::{DockerCompose, Edge, EdgeSpec, Node, NodeData, NodePosition, Service};
     use std::collections::HashMap;
+
+    use super::_parse_dependencies;
 
     #[test]
     fn test_parse_edges() {
@@ -121,6 +154,30 @@ mod tests {
             node_type: String::from("containerNode"),
         }];
         assert_eq!(super::parse_nodes(&test_string), expected_nodes);
+    }
+
+    #[test]
+    fn test_parse_dependencies() {
+        let node = Node {
+            id: String::from("a"),
+            data: NodeData {
+                label: String::from("container1"),
+            },
+            position: NodePosition { x: 250.0, y: 25.0 },
+            height: 62.0,
+            width: 159.0,
+            node_type: String::from("containerNode"),
+        };
+        let edges = vec![Edge {
+            id: String::from("edge1"),
+            source: String::from("a"),
+            target: String::from("b"),
+            data: None,
+        }];
+
+        let calc_dependency_vec = _parse_dependencies(&node, &edges).unwrap();
+
+        assert_eq!(vec![String::from("b")], calc_dependency_vec);
     }
 
     #[test]
@@ -170,6 +227,7 @@ mod tests {
             Service {
                 image: String::from("b"),
                 ports: vec![String::from("7000:9000")],
+                depends_on: Some(vec![String::from("nd3")])
             },
         );
         let expected_yml = DockerCompose {

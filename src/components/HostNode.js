@@ -5,11 +5,12 @@ import "./container-node.css";
 function HostNode({ data }) {
   return (
     <div className="container-node">
+      <Handle type="target" position={Position.Top} id="a" />
       <div>
         <ComputerIcon fontSize="large" />
         <label htmlFor="text">Host</label>
       </div>
-      <Handle type="source" position={Position.Bottom} id="b" />
+      <Handle type="target" position={Position.Bottom} id="b" />
     </div>
   );
 }

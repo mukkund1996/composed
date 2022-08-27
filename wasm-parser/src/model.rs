@@ -51,7 +51,8 @@ pub struct EdgeSpec {
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
 pub struct Service {
     pub image: String,
-    pub ports: Vec<String>
+    pub ports: Vec<String>,
+    pub depends_on: Option<Vec<String>>
 }
 
 #[derive(Deserialize, Serialize, Debug, PartialEq, Clone)]
