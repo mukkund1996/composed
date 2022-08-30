@@ -1,5 +1,5 @@
 import React from "react";
-import { getBezierPath } from "react-flow-renderer";
+import { getSmoothStepPath } from "react-flow-renderer";
 
 const textPathStyles = {
   fontSize: "7px",
@@ -18,7 +18,7 @@ const HostEdge = ({
   data,
   markerEnd,
 }) => {
-  const edgePath = getBezierPath({
+  const edgePath = getSmoothStepPath({
     sourceX,
     sourceY,
     sourcePosition,

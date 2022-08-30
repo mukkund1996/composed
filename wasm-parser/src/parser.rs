@@ -60,7 +60,7 @@ fn _parse_dependencies(node: &Node, edges: &Vec<Edge>) -> Option<Vec<String>> {
     }
     let mut dependency_vec: Vec<String> = vec![];
     for edge in edges {
-        if node.id == edge.source {
+        if node.id == edge.source && edge.target != LOCALHOST_ID {
             dependency_vec.push(edge.target.clone());
         }
     }

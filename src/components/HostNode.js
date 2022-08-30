@@ -10,6 +10,8 @@ function HostNode({ data }) {
         <ComputerIcon fontSize="large" />
         <label htmlFor="text">Host</label>
       </div>
+      <Handle type="target" position={Position.Left} id="c" />
+      <Handle type="target" position={Position.Right} id="d" />
       <Handle type="target" position={Position.Bottom} id="b" />
     </div>
   );

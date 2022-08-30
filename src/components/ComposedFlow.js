@@ -7,7 +7,6 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
-  MarkerType,
 } from "react-flow-renderer";
 
 // MUI Components
@@ -117,7 +116,7 @@ const ComposedFlow = () => {
   }, [portSettings]);
 
   // Snackbar hooks
-  const handleCloseErrorMessage = (event, reason) => {
+  const handleCloseErrorMessage = (_, reason) => {
     if (reason === "clickaway") {
       return;
     }
@@ -145,6 +144,7 @@ const ComposedFlow = () => {
           // In the case of edges between 2 containers
           params['animated'] = true;
           const modEdge = {
+            type: 'smoothstep',
             animated: true,
             label: "depends on",
             labelStyle: { fill: 'blue', fontWeight: 500 },
