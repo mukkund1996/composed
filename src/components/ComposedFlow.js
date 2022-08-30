@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState, forwardRef } from "react";
 import ReactFlow, {
   Background,
   MiniMap,
-  Controls,
   useReactFlow,
   applyNodeChanges,
   applyEdgeChanges,
@@ -10,20 +9,20 @@ import ReactFlow, {
 } from "react-flow-renderer";
 
 // MUI Components
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 // Entities
-import ContainerNode from "./ContainerNode.js";
-import HostNode from "./HostNode.js";
-import HostEdge from "./HostEdge.js";
-import initialNodes from "./InitialNodes.js";
-// UI promps
-import NodeCreatePrompt from "./NodeCreatePrompt.js";
-import HostEdgeCreatePrompt from "./HostEdgeCreatePrompt.js";
+import ContainerNode from "./Node/ContainerNode.js";
+import HostNode from "./Node/HostNode.js";
+import HostEdge from "./Edge/HostEdge.js";
+import initialNodes from "./Node/InitialNodes.js";
 
-import "./button.css";
+// UI promps
+import NodeCreatePrompt from "./Node/NodeCreatePrompt.js";
+import HostEdgeCreatePrompt from "./Edge/HostEdgeCreatePrompt.js";
+import CustomControl from "./Controls/CustomControl.js";
+
 import init, { print_string } from "wasm-parser";
 
 const Alert = forwardRef(function Alert(props, ref) {
@@ -109,9 +108,7 @@ const ComposedFlow = () => {
 
   const onClickAddHostEdge = useEffect(() => {
     if (hostEdge) {
-      setEdges((eds) =>
-        addEdge({ type: "portEdge", data: portSettings, ...hostEdge }, eds)
-      );
+      setEdges((eds) => addEdge({ type: "portEdge", data: portSettings, ...hostEdge }, eds));
     }
   }, [portSettings]);
 
@@ -124,14 +121,8 @@ const ComposedFlow = () => {
   };
 
   // React Flow hooks
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
-  );
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
-    [setEdges]
-  );
+  const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [setNodes]);
+  const onEdgesChange = useCallback((changes) => setEdges((es) => applyEdgeChanges(changes, es)), [setEdges]);
   const onConnect = useCallback(
     (params) => {
       setEdges((eds) => {
@@ -142,12 +133,12 @@ const ComposedFlow = () => {
           return eds;
         } else {
           // In the case of edges between 2 containers
-          params['animated'] = true;
+          params["animated"] = true;
           const modEdge = {
-            type: 'smoothstep',
+            type: "smoothstep",
             animated: true,
             label: "depends on",
-            labelStyle: { fill: 'blue', fontWeight: 500 },
+            labelStyle: { fill: "blue", fontWeight: 500 },
             ...params,
           };
 
@@ -200,30 +191,13 @@ const ComposedFlow = () => {
         nodeTypes={nodeTypes}
       />
       <MiniMap />
-      <Controls />
-      <Background />
-      <Button
-        variant="contained"
-        className="btn-add"
-        onClick={onClickOpenNodeDialog}
-      >
-        Add Node
-      </Button>
-      <Button
-        variant="contained"
-        className="btn-add"
-        onClick={onClickRemoveNode}
-      >
-        Remove Node
-      </Button>
-      <Button variant="contained" className="btn-add" onClick={onClickSubmit}>
-        Compose
-      </Button>
-      <NodeCreatePrompt
-        open={openNodePrompt}
-        setValue={onClickAddNode}
-        handleClose={handleCloseNodeDialog}
+      <CustomControl 
+      openNodeDialog={onClickOpenNodeDialog}
+      removeNode={onClickRemoveNode}
+      submit={onClickSubmit}
       />
+      <Background />
+      <NodeCreatePrompt open={openNodePrompt} setValue={onClickAddNode} handleClose={handleCloseNodeDialog} />
       <HostEdgeCreatePrompt
         open={openEdgePrompt}
         setValue={onClickUpdateHostEdge}
@@ -235,11 +209,7 @@ const ComposedFlow = () => {
         onClose={handleCloseErrorMessage}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <Alert
-          onClose={handleCloseErrorMessage}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
+        <Alert onClose={handleCloseErrorMessage} severity="error" sx={{ width: "100%" }}>
           {errorMessage}
         </Alert>
       </Snackbar>
