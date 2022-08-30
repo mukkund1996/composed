@@ -21,6 +21,7 @@ import initialNodes from "./Node/InitialNodes.js";
 // UI promps
 import NodeCreatePrompt from "./Node/NodeCreatePrompt.js";
 import HostEdgeCreatePrompt from "./Edge/HostEdgeCreatePrompt.js";
+import ComposePrompt from "./ComposePrompt/ComposePrompt.js";
 import CustomControl from "./Controls/CustomControl.js";
 
 import init, { print_string } from "wasm-parser";
@@ -61,8 +62,10 @@ const ComposedFlow = () => {
   // Entity States
   const [nodes, setNodes] = useState(initialNodes);
   const [edges, setEdges] = useState([]);
+  const [composeContent, setComposeContent] = useState("");
   const [openNodePrompt, setOpenNodePrompt] = useState(false);
   const [openEdgePrompt, setOpenEdgePrompt] = useState(false);
+  const [openComposePrompt, setOpenComposePrompt] = useState(false);
   const [portSettings, setPortSettings] = useState({
     containerPort: "",
     hostPort: "",
@@ -75,6 +78,9 @@ const ComposedFlow = () => {
   };
   const handleCloseEdgeDialog = () => {
     setOpenEdgePrompt(false);
+  };
+  const handleCloseComposeDialog = () => {
+    setOpenComposePrompt(false);
   };
   const onClickOpenNodeDialog = () => {
     setOpenNodePrompt(true);
@@ -170,6 +176,8 @@ const ComposedFlow = () => {
     const stringifiedEdges = JSON.stringify(edges);
     init().then(() => {
       const rusty_str = print_string(stringifiedNodes, stringifiedEdges);
+      setComposeContent(rusty_str);
+      setOpenComposePrompt(true);
       console.log(rusty_str);
     });
   };
@@ -191,11 +199,7 @@ const ComposedFlow = () => {
         nodeTypes={nodeTypes}
       />
       <MiniMap />
-      <CustomControl 
-      openNodeDialog={onClickOpenNodeDialog}
-      removeNode={onClickRemoveNode}
-      submit={onClickSubmit}
-      />
+      <CustomControl openNodeDialog={onClickOpenNodeDialog} removeNode={onClickRemoveNode} submit={onClickSubmit} />
       <Background />
       <NodeCreatePrompt open={openNodePrompt} setValue={onClickAddNode} handleClose={handleCloseNodeDialog} />
       <HostEdgeCreatePrompt
@@ -203,6 +207,7 @@ const ComposedFlow = () => {
         setValue={onClickUpdateHostEdge}
         handleClose={handleCloseEdgeDialog}
       />
+      <ComposePrompt open={openComposePrompt} handleClose={handleCloseComposeDialog} content={composeContent} />
       <Snackbar
         open={openErrorMessage}
         autoHideDuration={4000}
