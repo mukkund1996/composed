@@ -1,9 +1,17 @@
 import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import { DialogTitle, IconButton } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { useState } from "react";
+import Slide from "@mui/material/Slide";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import { useState, forwardRef } from "react";
 
-const HostEdgeCreatePrompt = ({ open, setValue, handleClose }) => {
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   const [containerPort, setContainerPort] = useState("");
   const [hostPort, setHostPort] = useState("");
 
@@ -21,6 +29,8 @@ const HostEdgeCreatePrompt = ({ open, setValue, handleClose }) => {
     if (containerPort.length !== 0 && hostPort.length !== 0) {
       setValue(containerPort, hostPort);
       handleClose();
+    } else {
+      setError("Both ports must be entered");
     }
   };
 
@@ -29,25 +39,20 @@ const HostEdgeCreatePrompt = ({ open, setValue, handleClose }) => {
   };
 
   return (
-    <Dialog open={open}>
-      <TextField
-        id="host-port"
-        label="Host Port"
-        variant="outlined"
-        onChange={handleHostPort}
-      />
-      <TextField
-        id="container-port"
-        label="Container Port"
-        variant="outlined"
-        onChange={handleContainerPort}
-      />
-      <Button variant="contained" onClick={onClickCreate}>
-        Create Edge
-      </Button>
-      <Button variant="contained" onClick={onClickClose}>
-        Close
-      </Button>
+    <Dialog TransitionComponent={Transition} open={open}>
+      <DialogTitle id="scroll-dialog-title">Specify the ports</DialogTitle>
+      <TextField id="host-port" label="Host Port" variant="outlined" onChange={handleHostPort} />
+      <TextField id="container-port" label="Container Port" variant="outlined" onChange={handleContainerPort} />
+      <DialogActions>
+        <IconButton variant="outlined" onClick={onClickCreate}>
+          <AddIcon />
+        </IconButton>
+      </DialogActions>
+      <DialogActions>
+        <IconButton variant="outlined" onClick={onClickClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogActions>
     </Dialog>
   );
 };

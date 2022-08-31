@@ -1,12 +1,12 @@
 .container-node {
-    border: 1px solid #eee;
-    padding: 5px;
-    border-radius: 5px;
-    background: white;
-  }
-  
-  .container-node label {
-    display: block;
-    color: #777;
-    font-size: 12px;
-  }
+  border: 1px solid #eee;
+  padding: 5px;
+  border-radius: 5px;
+  background: white;
+}
+
+.container-node label {
+  display: block;
+  color: #777;
+  font-size: 12px;
+}

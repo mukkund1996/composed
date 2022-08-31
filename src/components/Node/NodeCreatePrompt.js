@@ -1,9 +1,19 @@
 import Dialog from "@mui/material/Dialog";
+import { DialogTitle, IconButton } from "@mui/material";
+import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { useState } from "react";
+import Slide from "@mui/material/Slide";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
+import { useState, forwardRef } from "react";
+// CSS
+import "../prompt-styles.css";
 
-const NodeCreatePrompt = ({ open, setValue, handleClose }) => {
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="right" ref={ref} {...props} />;
+});
+
+const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   const [containerName, setContainerName] = useState("");
   const [serviceName, setServiceName] = useState("");
 
@@ -22,6 +32,9 @@ const NodeCreatePrompt = ({ open, setValue, handleClose }) => {
       setValue(containerName, serviceName);
       handleClose();
     }
+    else {
+      setError("Container information must be specified.");
+    }
   };
 
   const onClickClose = () => {
@@ -29,25 +42,20 @@ const NodeCreatePrompt = ({ open, setValue, handleClose }) => {
   };
 
   return (
-    <Dialog open={open}>
-      <TextField
-        id="service-name"
-        label="Service Name"
-        variant="outlined"
-        onChange={handleServiceName}
-      />
-      <TextField
-        id="image-name"
-        label="Image Name"
-        variant="outlined"
-        onChange={handleContainerName}
-      />
-      <Button variant="contained" onClick={onClickCreate}>
-        Create
-      </Button>
-      <Button variant="contained" onClick={onClickClose}>
-        Close
-      </Button>
+    <Dialog TransitionComponent={Transition} open={open}>
+      <DialogTitle id="scroll-dialog-title">Add a container</DialogTitle>
+      <TextField id="service-name" label="Service Name" variant="outlined" onChange={handleServiceName} />
+      <TextField id="image-name" label="Image Name" variant="outlined" onChange={handleContainerName} />
+      <DialogActions>
+        <IconButton variant="outlined" onClick={onClickCreate}>
+          <AddIcon />
+        </IconButton>
+      </DialogActions>
+      <DialogActions>
+        <IconButton variant="outlined" onClick={onClickClose}>
+          <CloseIcon />
+        </IconButton>
+      </DialogActions>
     </Dialog>
   );
 };

@@ -11,6 +11,7 @@ import ReactFlow, {
 // MUI Components
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import { Typography } from "@mui/material";
 
 // Entities
 import ContainerNode from "./Node/ContainerNode.js";
@@ -24,7 +25,11 @@ import HostEdgeCreatePrompt from "./Edge/HostEdgeCreatePrompt.js";
 import ComposePrompt from "./ComposePrompt/ComposePrompt.js";
 import CustomControl from "./Controls/CustomControl.js";
 
+// WASM modules
 import init, { print_string } from "wasm-parser";
+
+// CSS
+import "./flow-styles.css";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -58,6 +63,10 @@ const ComposedFlow = () => {
   // App States
   const [errorMessage, setErrorMessage] = useState("");
   const [openErrorMessage, setOpenErrorMessage] = useState(false);
+  const setAndOpenErrorSnackbar = (message) => {
+    setErrorMessage(message);
+    setOpenErrorMessage(true);
+  };
 
   // Entity States
   const [nodes, setNodes] = useState(initialNodes);
@@ -198,14 +207,21 @@ const ComposedFlow = () => {
         onConnect={onConnect}
         nodeTypes={nodeTypes}
       />
+      <h2 className="icon-style">Composed</h2>
       <MiniMap />
       <CustomControl openNodeDialog={onClickOpenNodeDialog} removeNode={onClickRemoveNode} submit={onClickSubmit} />
       <Background />
-      <NodeCreatePrompt open={openNodePrompt} setValue={onClickAddNode} handleClose={handleCloseNodeDialog} />
+      <NodeCreatePrompt
+        open={openNodePrompt}
+        setValue={onClickAddNode}
+        handleClose={handleCloseNodeDialog}
+        setError={setAndOpenErrorSnackbar}
+      />
       <HostEdgeCreatePrompt
         open={openEdgePrompt}
         setValue={onClickUpdateHostEdge}
         handleClose={handleCloseEdgeDialog}
+        setError={setAndOpenErrorSnackbar}
       />
       <ComposePrompt open={openComposePrompt} handleClose={handleCloseComposeDialog} content={composeContent} />
       <Snackbar
