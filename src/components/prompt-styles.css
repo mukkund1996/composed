@@ -5,10 +5,7 @@
 }
 
 .text-fields {
-  display: inline-flex;
-  flex-direction: column;
+  margin-left: 7%;
+  width: 85%;
 }
 
-.text-headers{
-    padding: 1;
-}

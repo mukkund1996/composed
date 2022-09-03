@@ -1,6 +1,7 @@
 .react-flow__controls {
   bottom: 50%;
-  border-radius: 10px;
+  border-radius: 5%;
+  left: 1%;
 }
 
 .react-flow__controls-button {

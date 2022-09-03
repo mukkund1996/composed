@@ -3,6 +3,7 @@ import { Button, DialogTitle, Grow } from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import { useState, forwardRef } from "react";
+import { promptStyle, textPromptStyle, headingPromptStyle } from "../Styles";
 // CSS
 import "../prompt-styles.css";
 
@@ -38,24 +39,36 @@ const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   };
 
   return (
-    <Dialog TransitionComponent={Transition} open={open} PaperProps={{ sx: { borderRadius: "20px", padding: "1%" } }}>
-      <DialogTitle id="scroll-dialog-title" align="left">
+    <Dialog variant="outlined" TransitionComponent={Transition} open={open} PaperProps={{ sx: promptStyle }}>
+      <DialogTitle id="scroll-dialog-title" align="left" sx={headingPromptStyle}>
         Add a container
       </DialogTitle>
       <div className="text-fields">
-        <TextField id="service-name" label="Service Name" variant="outlined" onChange={handleServiceName} />
-        <TextField id="image-name" label="Image Name" variant="outlined" onChange={handleContainerName} />
+      <TextField
+        id="service-name"
+        helperText="Name of the microservice"
+        placeholder="Service"
+        variant="outlined"
+        onChange={handleServiceName}
+      />
+      <TextField
+        id="image-name"
+        helperText="Image ID of the microservice"
+        placeholder="Image"
+        variant="outlined"
+        onChange={handleContainerName}
+      />
       </div>
       <div className="buttons">
-        <DialogActions>
-          <Button variant="contained" onClick={onClickCreate}>
-            Add
-          </Button>
-        </DialogActions>
         <DialogActions>
           <Button variant="text" onClick={onClickClose}>
             Close
           </Button>
+          <DialogActions>
+            <Button variant="contained" onClick={onClickCreate}>
+              Add
+            </Button>
+          </DialogActions>
         </DialogActions>
       </div>
     </Dialog>

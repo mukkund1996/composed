@@ -96,20 +96,25 @@ const ComposedFlow = () => {
   };
 
   const onClickAddNode = useCallback(
-    (containerName, serviceName) => {
-      const id = containerName;
-      const newNode = {
-        id,
-        position: {
-          x: Math.random() * 500,
-          y: Math.random() * 500,
-        },
-        data: {
-          label: serviceName,
-        },
-        type: "containerNode",
-      };
-      reactFlowInstance.addNodes(newNode);
+    (imageName, serviceName) => {
+      const foundService = nodes.map(n => n.data.label).find(v => v === serviceName);
+      if (foundService){
+        setAndOpenErrorSnackbar("Node with same service name cannot be added.")
+      }
+      else{
+        const newNode = {
+          containerName: imageName,
+          position: {
+            x: Math.random() * 200,
+            y: Math.random() * 200,
+          },
+          data: {
+            label: serviceName,
+          },
+          type: "containerNode",
+        };
+        reactFlowInstance.addNodes(newNode);
+      }
     },
     [reactFlowInstance]
   );

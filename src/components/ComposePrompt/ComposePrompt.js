@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Button, Grow } from "@mui/material";
+import { promptStyle, headingPromptStyle, composeContent } from "../Styles";
 import "../prompt-styles.css";
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -32,14 +33,14 @@ const ComposePrompt = ({ open, handleClose, content }) => {
         scroll="paper"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
-        PaperProps={{ sx: { borderRadius: "20px", padding: "1%" } }}
+        PaperProps={{ sx: promptStyle }}
       >
-        <DialogTitle id="scroll-dialog-title">Docker Compose Configuration</DialogTitle>
-        <DialogContent dividers={true}>
+        <DialogTitle id="scroll-dialog-title" sx={headingPromptStyle}>Configuration</DialogTitle>
+        <DialogContent>
           <DialogContentText
             id="scroll-dialog-description"
             ref={descriptionElementRef}
-            style={{ whiteSpace: "pre-wrap" }}
+            style={ composeContent }
           >
             {content}
           </DialogContentText>

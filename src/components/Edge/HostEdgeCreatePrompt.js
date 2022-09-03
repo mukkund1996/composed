@@ -3,6 +3,7 @@ import DialogActions from "@mui/material/DialogActions";
 import { DialogTitle, Button, Grow } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { useState, forwardRef } from "react";
+import { promptStyle, headingPromptStyle } from "../Styles";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Grow direction="up" ref={ref} {...props} />;
@@ -36,21 +37,35 @@ const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   };
 
   return (
-    <Dialog TransitionComponent={Transition} open={open} PaperProps={{sx: {borderRadius: "20px", padding: "1%"}}}>
-      <DialogTitle id="scroll-dialog-title">Specify the ports</DialogTitle>
-      <TextField id="host-port" label="Host Port" variant="outlined" onChange={handleHostPort} />
-      <TextField id="container-port" label="Container Port" variant="outlined" onChange={handleContainerPort} />
+    <Dialog TransitionComponent={Transition} open={open} PaperProps={{ sx: promptStyle }}>
+      <DialogTitle id="scroll-dialog-title" sx={headingPromptStyle}>Specify the ports</DialogTitle>
+      <div className="text-fields">
+        <TextField
+          id="host-port"
+          helperText="Port connected to the local host"
+          placeholder="Host Port"
+          variant="outlined"
+          onChange={handleHostPort}
+        />
+        <TextField
+          id="container-port"
+          helperText="Port connected to the container"
+          placeholder="Container Port"
+          variant="outlined"
+          onChange={handleContainerPort}
+        />
+      </div>
       <div className="buttons">
-      <DialogActions>
-        <Button variant="contained" onClick={onClickCreate}>
-          Add
-        </Button>
-      </DialogActions>
-      <DialogActions>
-        <Button variant="text" onClick={onClickClose}>
-          Close
-        </Button>
-      </DialogActions>
+        <DialogActions>
+          <Button variant="text" onClick={onClickClose}>
+            Close
+          </Button>
+        </DialogActions>
+        <DialogActions>
+          <Button variant="contained" onClick={onClickCreate}>
+            Add
+          </Button>
+        </DialogActions>
       </div>
     </Dialog>
   );
