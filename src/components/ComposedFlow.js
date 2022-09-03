@@ -11,7 +11,6 @@ import ReactFlow, {
 // MUI Components
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
-import { Typography } from "@mui/material";
 
 // Entities
 import ContainerNode from "./Node/ContainerNode.js";
@@ -30,6 +29,7 @@ import init, { print_string } from "wasm-parser";
 
 // CSS
 import "./flow-styles.css";
+import "./prompt-styles.css"
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

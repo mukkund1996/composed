@@ -1,14 +1,11 @@
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import { DialogTitle, IconButton } from "@mui/material";
+import { DialogTitle, Button, Grow } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import Slide from "@mui/material/Slide";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
 import { useState, forwardRef } from "react";
 
 const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Grow direction="up" ref={ref} {...props} />;
 });
 
 const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
@@ -39,20 +36,22 @@ const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   };
 
   return (
-    <Dialog TransitionComponent={Transition} open={open}>
+    <Dialog TransitionComponent={Transition} open={open} PaperProps={{sx: {borderRadius: "20px", padding: "1%"}}}>
       <DialogTitle id="scroll-dialog-title">Specify the ports</DialogTitle>
       <TextField id="host-port" label="Host Port" variant="outlined" onChange={handleHostPort} />
       <TextField id="container-port" label="Container Port" variant="outlined" onChange={handleContainerPort} />
+      <div className="buttons">
       <DialogActions>
-        <IconButton variant="outlined" onClick={onClickCreate}>
-          <AddIcon />
-        </IconButton>
+        <Button variant="contained" onClick={onClickCreate}>
+          Add
+        </Button>
       </DialogActions>
       <DialogActions>
-        <IconButton variant="outlined" onClick={onClickClose}>
-          <CloseIcon />
-        </IconButton>
+        <Button variant="text" onClick={onClickClose}>
+          Close
+        </Button>
       </DialogActions>
+      </div>
     </Dialog>
   );
 };

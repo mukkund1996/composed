@@ -1,4 +1,14 @@
-.MuiPaper-root{
-    border-radius: 12px;
-    padding: 1%;
+.buttons {
+  display: inline-flex;
+  justify-content: flex-end;
+  padding: 20px 0px 0px 0px;
+}
+
+.text-fields {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.text-headers{
+    padding: 1;
 }

@@ -1,16 +1,14 @@
 import { useEffect, useRef, forwardRef } from "react";
-import IconButton from "@mui/material/IconButton";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import CloseIcon from "@mui/icons-material/Close";
-import Slide from "@mui/material/Slide";
+import { Button, Grow } from "@mui/material";
 import "../prompt-styles.css";
 
 const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="right" ref={ref} {...props} />;
+  return <Grow direction="right" ref={ref} {...props} />;
 });
 
 const ComposePrompt = ({ open, handleClose, content }) => {
@@ -34,6 +32,7 @@ const ComposePrompt = ({ open, handleClose, content }) => {
         scroll="paper"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
+        PaperProps={{ sx: { borderRadius: "20px", padding: "1%" } }}
       >
         <DialogTitle id="scroll-dialog-title">Docker Compose Configuration</DialogTitle>
         <DialogContent dividers={true}>
@@ -45,11 +44,13 @@ const ComposePrompt = ({ open, handleClose, content }) => {
             {content}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <IconButton variant="outlined" onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </DialogActions>
+        <div className="buttons">
+          <DialogActions>
+            <Button variant="text" onClick={handleClose}>
+              Close
+            </Button>
+          </DialogActions>
+        </div>
       </Dialog>
     </div>
   );
