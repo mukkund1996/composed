@@ -30,6 +30,7 @@ import init, { print_string } from "wasm-parser";
 // CSS
 import "./flow-styles.css";
 import "./prompt-styles.css";
+import { letterSpacing } from "@mui/system";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -96,21 +97,29 @@ const ComposedFlow = () => {
   };
 
   const onClickAddNode = useCallback(
-    (imageName, serviceName) => {
+    (imageName, serviceName, hostVolume, containerVolume) => {
       const foundService = nodes.map((n) => n.id).find((v) => v === serviceName);
       if (foundService) {
         setAndOpenErrorSnackbar("Node with same service name cannot be added.");
       } else {
+        let dataSpec;
+          dataSpec = {
+            label: imageName,
+            serviceName: serviceName,
+            volumes: [
+              {
+                host: hostVolume,
+                container: containerVolume,
+              },
+            ],
+          };
         const newNode = {
           id: serviceName,
           position: {
             x: Math.random() * 200,
             y: Math.random() * 200,
           },
-          data: {
-            label: imageName,
-            serviceName: serviceName,
-          },
+          data: dataSpec,
           type: "containerNode",
         };
         reactFlowInstance.addNodes(newNode);

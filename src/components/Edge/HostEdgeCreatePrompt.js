@@ -10,8 +10,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
-  const [containerPort, setContainerPort] = useState("");
-  const [hostPort, setHostPort] = useState("");
+  const [containerPort, setContainerPort] = useState(null);
+  const [hostPort, setHostPort] = useState(null);
 
   const handleContainerPort = (event) => {
     const { _, value } = event.target;
@@ -24,7 +24,7 @@ const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   };
 
   const onClickCreate = () => {
-    if (containerPort.length !== 0 && hostPort.length !== 0) {
+    if (containerPort && hostPort) {
       setValue(containerPort, hostPort);
       handleClose();
     } else {

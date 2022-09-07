@@ -14,6 +14,8 @@ const Transition = forwardRef(function Transition(props, ref) {
 const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   const [containerName, setContainerName] = useState("");
   const [serviceName, setServiceName] = useState("");
+  const [containerVolume, setContainerVolume] = useState(null);
+  const [hostVolume, setHostVolume] = useState(null);
 
   const handleContainerName = (event) => {
     const { _, value } = event.target;
@@ -24,10 +26,20 @@ const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
     const { _, value } = event.target;
     setServiceName(value);
   };
+  
+  const handleContainerVolume = (event) => {
+    const { _, value } = event.target;
+    setContainerVolume(value);
+  };
+  
+  const handleHostVolume = (event) => {
+    const { _, value } = event.target;
+    setHostVolume(value);
+  };
 
   const onClickCreate = () => {
     if (containerName.length !== 0 && serviceName.length !== 0) {
-      setValue(containerName, serviceName);
+      setValue(containerName, serviceName, hostVolume, containerVolume);
       handleClose();
     } else {
       setError("Container information must be specified.");
@@ -57,6 +69,20 @@ const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
         placeholder="Image"
         variant="outlined"
         onChange={handleContainerName}
+      />
+      <TextField
+        id="volume-container"
+        helperText="Volume located in the container"
+        placeholder="Container Volume"
+        variant="outlined"
+        onChange={handleContainerVolume}
+      />
+      <TextField
+        id="volume-host"
+        helperText="Volume located in the host"
+        placeholder="Host Volume"
+        variant="outlined"
+        onChange={handleHostVolume}
       />
       </div>
       <div className="buttons">

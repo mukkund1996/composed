@@ -54,6 +54,18 @@ fn _parse_ports(node: &Node, edges: &Vec<Edge>) -> Option<(i32, i32)> {
     return Some((host_port, container_port));
 }
 
+fn _parse_volumes(node: &Node) -> Option<Vec<String>> {
+    match &node.data.volumes {
+        Some(volumes) => Some(
+            volumes
+                .iter()
+                .map(|volume| format!("{}:{}", volume.host, volume.container))
+                .collect(),
+        ),
+        None => None,
+    }
+}
+
 fn _parse_dependencies(node: &Node, edges: &Vec<Edge>) -> Option<Vec<String>> {
     if node.id == LOCALHOST_ID {
         return None;
@@ -89,7 +101,8 @@ fn generate_dockercompose_yml(nodes: Vec<Node>, edges: Vec<Edge>) -> DockerCompo
             Service {
                 image: node.data.label.clone(),
                 ports: vec![String::from(format!("{}:{}", host_port, container_port))],
-                depends_on: dependency_vec
+                depends_on: dependency_vec,
+                volumes: _parse_volumes(&node),
             },
         );
     }
@@ -112,7 +125,9 @@ pub fn print_string(node_data: String, edge_data: String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::model::{DockerCompose, Edge, EdgeSpec, Node, NodeData, NodePosition, Service};
+    use crate::model::{
+        DockerCompose, Edge, EdgeSpec, Node, NodeData, NodePosition, Service, VolumeSpec,
+    };
     use std::collections::HashMap;
 
     use super::_parse_dependencies;
@@ -141,12 +156,47 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_volumes() {
+        let node = Node {
+            id: String::from("a"),
+            data: NodeData {
+                label: String::from("Node A"),
+                service_name: String::from("a"),
+                volumes: Some(vec![
+                    VolumeSpec {
+                        host: String::from("."),
+                        container: String::from("/app"),
+                    },
+                    VolumeSpec {
+                        host: String::from("/tmp/data"),
+                        container: String::from("/app-data"),
+                    },
+                ]),
+            },
+            position: NodePosition { x: 250.0, y: 25.0 },
+            height: 62.0,
+            width: 159.0,
+            node_type: String::from("containerNode"),
+        };
+
+        let expected_volume = Some(vec![
+            String::from(".:/app"),
+            String::from("/tmp/data:/app-data"),
+        ]);
+        assert_eq!(super::_parse_volumes(&node), expected_volume);
+    }
+    #[test]
     fn test_parse_nodes() {
-        let test_string = String::from("[{\"id\":\"a\",\"nodeType\":\"containerNode\",\"data\":{\"label\":\"Node A\"},\"position\":{\"x\":250,\"y\":25},\"width\":159,\"height\":62}]");
+        let test_string = String::from("[{\"id\":\"a\",\"nodeType\":\"containerNode\",\"data\":{\"label\":\"Node A\",\"serviceName\":\"a\",\"volumes\":[{\"container\":\"/app\",\"host\":\".\"}]},\"position\":{\"x\":250,\"y\":25},\"width\":159,\"height\":62}]");
         let expected_nodes = vec![Node {
             id: String::from("a"),
             data: NodeData {
                 label: String::from("Node A"),
+                service_name: String::from("a"),
+                volumes: Some(vec![VolumeSpec {
+                    host: String::from("."),
+                    container: String::from("/app"),
+                }]),
             },
             position: NodePosition { x: 250.0, y: 25.0 },
             height: 62.0,
@@ -162,6 +212,8 @@ mod tests {
             id: String::from("a"),
             data: NodeData {
                 label: String::from("container1"),
+                service_name: String::from("a"),
+                volumes: None,
             },
             position: NodePosition { x: 250.0, y: 25.0 },
             height: 62.0,
@@ -187,6 +239,8 @@ mod tests {
                 id: String::from("localhost"),
                 data: NodeData {
                     label: String::from("host-node"),
+                    service_name: String::from("local host"),
+                    volumes: None,
                 },
                 position: NodePosition { x: 250.0, y: 25.0 },
                 height: 62.0,
@@ -197,6 +251,17 @@ mod tests {
                 id: String::from("node-B"),
                 data: NodeData {
                     label: String::from("b"),
+                    service_name: String::from("node-B"),
+                    volumes: Some(vec![
+                        VolumeSpec {
+                            host: String::from("."),
+                            container: String::from("/app"),
+                        },
+                        VolumeSpec {
+                            host: String::from("/tmp/data"),
+                            container: String::from("/app-data"),
+                        },
+                    ]),
                 },
                 position: NodePosition { x: 300.0, y: 25.0 },
                 height: 62.0,
@@ -227,7 +292,11 @@ mod tests {
             Service {
                 image: String::from("b"),
                 ports: vec![String::from("7000:9000")],
-                depends_on: Some(vec![String::from("node-C")])
+                depends_on: Some(vec![String::from("node-C")]),
+                volumes: Some(vec![
+                    String::from(".:/app"),
+                    String::from("/tmp/data:/app-data"),
+                ]),
             },
         );
         let expected_yml = DockerCompose {
