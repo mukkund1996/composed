@@ -43,7 +43,7 @@ const HostEdge = ({
           startOffset="15%"
           textAnchor="top"
         >
-          {data.hostPort}
+          {data.containerPort}
         </textPath>
         <textPath
           href={`#${id}`}
@@ -51,7 +51,7 @@ const HostEdge = ({
           startOffset="85%"
           textAnchor="middle"
         >
-          {data.containerPort}
+          {data.hostPort}
         </textPath>
       </text>
     </>

@@ -76,8 +76,8 @@ const ComposedFlow = () => {
   const [openEdgePrompt, setOpenEdgePrompt] = useState(false);
   const [openComposePrompt, setOpenComposePrompt] = useState(false);
   const [portSettings, setPortSettings] = useState({
-    containerPort: "",
     hostPort: "",
+    containerPort: "",
   });
   const [hostEdge, setHostEdge] = useState(null);
 
@@ -103,7 +103,7 @@ const ComposedFlow = () => {
       }
       else{
         const newNode = {
-          containerName: imageName,
+          id: imageName,
           position: {
             x: Math.random() * 200,
             y: Math.random() * 200,
@@ -121,8 +121,8 @@ const ComposedFlow = () => {
 
   const onClickUpdateHostEdge = useCallback((conPort, hPort) => {
     setPortSettings({
-      containerPort: conPort,
       hostPort: hPort,
+      containerPort: conPort,
     });
   });
 
