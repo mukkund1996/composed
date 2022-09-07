@@ -16,7 +16,7 @@ function ContainerNode({ data }) {
       id="b"
       />
       <div>
-        <label htmlFor="text">{data.label}</label>
+        <label htmlFor="text">{data.serviceName}</label>
       </div>
       <Handle 
       type="target"

@@ -85,9 +85,9 @@ fn generate_dockercompose_yml(nodes: Vec<Node>, edges: Vec<Edge>) -> DockerCompo
         let dependency_vec = _parse_dependencies(&node, &edges);
 
         service_map.insert(
-            node.data.label.clone(),
+            node.id.clone(),
             Service {
-                image: node.id.clone(),
+                image: node.data.label.clone(),
                 ports: vec![String::from(format!("{}:{}", host_port, container_port))],
                 depends_on: dependency_vec
             },
@@ -194,9 +194,9 @@ mod tests {
                 node_type: String::from("containerNode"),
             },
             Node {
-                id: String::from("b"),
+                id: String::from("node-B"),
                 data: NodeData {
-                    label: String::from("node-B"),
+                    label: String::from("b"),
                 },
                 position: NodePosition { x: 300.0, y: 25.0 },
                 height: 62.0,
@@ -208,7 +208,7 @@ mod tests {
             Edge {
                 id: String::from("edge1"),
                 source: String::from("localhost"),
-                target: String::from("b"),
+                target: String::from("node-B"),
                 data: Some(EdgeSpec {
                     container_port: String::from("9000"),
                     host_port: String::from("7000"),
@@ -216,8 +216,8 @@ mod tests {
             },
             Edge {
                 id: String::from("edge2"),
-                source: String::from("b"),
-                target: String::from("nd3"),
+                source: String::from("node-B"),
+                target: String::from("node-C"),
                 data: None,
             },
         ];
@@ -227,7 +227,7 @@ mod tests {
             Service {
                 image: String::from("b"),
                 ports: vec![String::from("7000:9000")],
-                depends_on: Some(vec![String::from("nd3")])
+                depends_on: Some(vec![String::from("node-C")])
             },
         );
         let expected_yml = DockerCompose {

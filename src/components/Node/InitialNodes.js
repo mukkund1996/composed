@@ -8,9 +8,9 @@ const initialNodes = [
   {
     id: "service-1",
     type: "containerNode",
-    data: { label: "image-1" },
+    data: { label: "image-1", serviceName: "service-1" },
     position: { x: 400, y: 150 },
-  }
+  },
 ];
 
 export default initialNodes;

@@ -29,7 +29,7 @@ import init, { print_string } from "wasm-parser";
 
 // CSS
 import "./flow-styles.css";
-import "./prompt-styles.css"
+import "./prompt-styles.css";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -97,19 +97,19 @@ const ComposedFlow = () => {
 
   const onClickAddNode = useCallback(
     (imageName, serviceName) => {
-      const foundService = nodes.map(n => n.data.label).find(v => v === serviceName);
-      if (foundService){
-        setAndOpenErrorSnackbar("Node with same service name cannot be added.")
-      }
-      else{
+      const foundService = nodes.map((n) => n.id).find((v) => v === serviceName);
+      if (foundService) {
+        setAndOpenErrorSnackbar("Node with same service name cannot be added.");
+      } else {
         const newNode = {
-          id: imageName,
+          id: serviceName,
           position: {
             x: Math.random() * 200,
             y: Math.random() * 200,
           },
           data: {
-            label: serviceName,
+            label: imageName,
+            serviceName: serviceName,
           },
           type: "containerNode",
         };
