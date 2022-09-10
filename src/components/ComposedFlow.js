@@ -30,8 +30,8 @@ import CustomControl from "./Controls/CustomControl.js";
 import init, { print_string } from "wasm-parser";
 
 // CSS
-import "./flow-styles.css";
-import "./prompt-styles.css";
+import "./styles/flow-styles.css";
+import "./styles/prompt-styles.css";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

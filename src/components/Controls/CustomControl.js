@@ -5,7 +5,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Tooltip from "@mui/material/Tooltip";
 
-import "./custom-controls.css";
+import "../styles/custom-controls.css";
 
 const CustomControl = ({ openNodeDialog, removeNode, submit }) => {
   return (

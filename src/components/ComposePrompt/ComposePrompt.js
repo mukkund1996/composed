@@ -5,8 +5,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Button, Grow } from "@mui/material";
-import { promptStyle, headingPromptStyle, composeContent } from "../Styles";
-import "../prompt-styles.css";
+import { promptStyle, headingPromptStyle, composeContent } from "../styles/Styles";
+import "../styles/prompt-styles.css";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Grow direction="right" ref={ref} {...props} />;

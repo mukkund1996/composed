@@ -1,7 +1,7 @@
 import { Tooltip, Typography, Zoom } from "@mui/material";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Handle, Position } from "react-flow-renderer";
-import "./container-node.css";
+import "../styles/container-node.css";
 
 function ContainerNode({ data, selected, dragging }) {
   return (
@@ -26,6 +26,7 @@ function ContainerNode({ data, selected, dragging }) {
       // Open tooltip only when not being dragged
       open={selected && !dragging}
       TransitionComponent={Zoom}
+      enterNextDelay={1000}
     >
       <div className="container-node">
         <Handle type="source" position={Position.Top} id="a" />
