@@ -3,8 +3,6 @@ import ReactFlow, {
   Background,
   MiniMap,
   useReactFlow,
-  applyNodeChanges,
-  applyEdgeChanges,
   addEdge,
   useNodesState,
   useEdgesState,
@@ -27,7 +25,7 @@ import ComposePrompt from "./ComposePrompt/ComposePrompt.js";
 import CustomControl from "./Controls/CustomControl.js";
 
 // WASM modules
-import init, { print_string } from "wasm-parser";
+import { init, print_string } from "wasm-parser";
 
 // CSS
 import "./styles/flow-styles.css";
@@ -206,7 +204,6 @@ const ComposedFlow = () => {
       const rusty_str = print_string(stringifiedNodes, stringifiedEdges);
       setComposeContent(rusty_str);
       setOpenComposePrompt(true);
-      console.log(rusty_str);
     });
   };
 
