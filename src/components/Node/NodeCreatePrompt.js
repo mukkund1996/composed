@@ -72,14 +72,14 @@ const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
       />
       <TextField
         id="volume-container"
-        helperText="Volume located in the container"
+        helperText="Directory in the container"
         placeholder="Container Volume"
         variant="outlined"
         onChange={handleContainerVolume}
       />
       <TextField
         id="volume-host"
-        helperText="Volume located in the host"
+        helperText="Directory in the host"
         placeholder="Host Volume"
         variant="outlined"
         onChange={handleHostVolume}

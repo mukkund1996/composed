@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, forwardRef } from "react";
+import { useCallback, useEffect, useState, forwardRef, useMemo } from "react";
 import ReactFlow, {
   Background,
   MiniMap,
@@ -6,6 +6,8 @@ import ReactFlow, {
   applyNodeChanges,
   applyEdgeChanges,
   addEdge,
+  useNodesState,
+  useEdgesState,
 } from "react-flow-renderer";
 
 // MUI Components
@@ -30,7 +32,6 @@ import init, { print_string } from "wasm-parser";
 // CSS
 import "./flow-styles.css";
 import "./prompt-styles.css";
-import { letterSpacing } from "@mui/system";
 
 const Alert = forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -70,8 +71,8 @@ const ComposedFlow = () => {
   };
 
   // Entity States
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [composeContent, setComposeContent] = useState("");
   const [openNodePrompt, setOpenNodePrompt] = useState(false);
   const [openEdgePrompt, setOpenEdgePrompt] = useState(false);
@@ -81,6 +82,7 @@ const ComposedFlow = () => {
     containerPort: "",
   });
   const [hostEdge, setHostEdge] = useState(null);
+  const [openNodeToolTip, setOpenNodeToolTip] = useState(false);
 
   // Dialog hooks
   const handleCloseNodeDialog = () => {
@@ -150,8 +152,6 @@ const ComposedFlow = () => {
   };
 
   // React Flow hooks
-  const onNodesChange = useCallback((changes) => setNodes((nds) => applyNodeChanges(changes, nds)), [setNodes]);
-  const onEdgesChange = useCallback((changes) => setEdges((es) => applyEdgeChanges(changes, es)), [setEdges]);
   const onConnect = useCallback(
     (params) => {
       setEdges((eds) => {
@@ -177,6 +177,11 @@ const ComposedFlow = () => {
     },
     [setEdges]
   );
+
+  // const onNodeSelect = (_, node) => {
+  //   setOpenNodeToolTip(true);
+  //   console.log("tool tip open for " + node.id);
+  // };
 
   const onClickRemoveNode = (_) => {
     const selectedNode = nodes.filter((nd) => nd.selected);
