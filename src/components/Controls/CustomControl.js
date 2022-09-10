@@ -5,24 +5,32 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Tooltip from "@mui/material/Tooltip";
 
-import "../styles/custom-controls.css";
+import { controlDiv, controlButtons, buttonSizing } from "../styles/Styles";
 
 const CustomControl = ({ openNodeDialog, removeNode, submit }) => {
   return (
-    <Controls showZoom={false} showFitView={false} showInteractive={false}>
-      <ControlButton onClick={openNodeDialog}>
+    <Controls
+      style={controlDiv}
+      showZoom={false}
+      showFitView={false}
+      showInteractive={false}
+    >
+      <ControlButton style={controlButtons} onClick={openNodeDialog}>
         <Tooltip title="Add container" placement="right">
-          <AddIcon />
+          <AddIcon style={buttonSizing} />
         </Tooltip>
       </ControlButton>
-      <ControlButton onClick={removeNode}>
+      <ControlButton style={controlButtons} onClick={removeNode}>
         <Tooltip title="Remove container" placement="right">
-          <DeleteIcon />
+          <DeleteIcon style={buttonSizing} />
         </Tooltip>
       </ControlButton>
-      <ControlButton onClick={submit}>
-        <Tooltip title="Generate docker-compose configuration" placement="bottom">
-          <PlayArrowIcon />
+      <ControlButton style={controlButtons} onClick={submit}>
+        <Tooltip
+          title="Generate docker-compose configuration"
+          placement="bottom"
+        >
+          <PlayArrowIcon style={buttonSizing} />
         </Tooltip>
       </ControlButton>
     </Controls>
