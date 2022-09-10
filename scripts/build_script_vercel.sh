@@ -7,8 +7,9 @@ echo "Installing wasm-pack..."
 cargo install wasm-pack
 
 echo "Building wasm-parser..."
+cd wasm-parser
 # Build wasm-parser 
-npm run build:wasm
+/vercel/.cargo/bin/wasm-pack build --target web --out-dir ./wasm-build
 
 echo "Build static frontend client..."
 # Build static html for the react client
