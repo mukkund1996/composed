@@ -22,14 +22,34 @@ function HostNode({ data, selected, dragging }) {
       enterNextDelay={1000}
     >
       <div className="container-node">
-        <Handle type="target" style={targetHandleStyling} position={Position.Top} id="a" />
+        <Handle
+          type="target"
+          style={targetHandleStyling}
+          position={Position.Top}
+          id="a"
+        />
         <div>
           <ComputerIcon fontSize="large" />
           <label htmlFor="text">Host</label>
         </div>
-        <Handle type="target" style={targetHandleStyling} position={Position.Left} id="c" />
-        <Handle type="target" style={targetHandleStyling} position={Position.Right} id="d" />
-        <Handle type="target" style={targetHandleStyling} position={Position.Bottom} id="b" />
+        <Handle
+          type="target"
+          style={targetHandleStyling}
+          position={Position.Left}
+          id="c"
+        />
+        <Handle
+          type="target"
+          style={targetHandleStyling}
+          position={Position.Right}
+          id="d"
+        />
+        <Handle
+          type="target"
+          style={targetHandleStyling}
+          position={Position.Bottom}
+          id="b"
+        />
       </div>
     </Tooltip>
   );
