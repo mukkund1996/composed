@@ -1,7 +1,7 @@
 # Composed
 Simple GUI to generate `docker-compose.yaml` using a flow chart.
 
-# Development Setup
+## Development Setup
 To install the npm package and the dependencies, follow the below steps:
 
 ### Install rust 
@@ -29,7 +29,7 @@ npm install
 npm run start
 ```
 
-# Production Build
+## Production Build
 Directly run the bash script in the repository:
 ```
 bash scripts/build_script_vercel.sh
