@@ -9,7 +9,7 @@ const initialNodes = [
     id: "service-1",
     type: "containerNode",
     data: {
-      label: "image-1",
+      label: "example-docker-image",
       serviceName: "service-1",
       volumes: [{
         container: "/app",
