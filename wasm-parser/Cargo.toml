@@ -1,7 +1,10 @@
 [package]
 name = "wasm-parser"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
+description = "Library containing functions to generate docker-compose configuration string."
+repository = "https://github.com/mukkund1996/composed"
+license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
