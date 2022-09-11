@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, forwardRef, useMemo } from "react";
+/* eslint react-hooks/exhaustive-deps: 0 */
+import { useCallback, useEffect, useState, forwardRef } from "react";
 import ReactFlow, {
   Background,
   MiniMap,
@@ -80,7 +81,6 @@ const ComposedFlow = () => {
     containerPort: "",
   });
   const [hostEdge, setHostEdge] = useState(null);
-  const [openNodeToolTip, setOpenNodeToolTip] = useState(false);
 
   // Dialog hooks
   const handleCloseNodeDialog = () => {
@@ -125,7 +125,7 @@ const ComposedFlow = () => {
         reactFlowInstance.addNodes(newNode);
       }
     },
-    [reactFlowInstance]
+    [reactFlowInstance, nodes]
   );
 
   const onClickUpdateHostEdge = useCallback((conPort, hPort) => {
@@ -133,8 +133,9 @@ const ComposedFlow = () => {
       hostPort: hPort,
       containerPort: conPort,
     });
-  });
+  }, []);
 
+  // eslint-disable-next-line
   const onClickAddHostEdge = useEffect(() => {
     if (hostEdge) {
       setEdges((eds) => addEdge({ type: "portEdge", data: portSettings, ...hostEdge }, eds));
@@ -175,11 +176,6 @@ const ComposedFlow = () => {
     },
     [setEdges]
   );
-
-  // const onNodeSelect = (_, node) => {
-  //   setOpenNodeToolTip(true);
-  //   console.log("tool tip open for " + node.id);
-  // };
 
   const onClickRemoveNode = (_) => {
     const selectedNode = nodes.filter((nd) => nd.selected);

@@ -3,7 +3,7 @@ import { Button, DialogTitle, Grow } from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
 import { useState, forwardRef } from "react";
-import { promptStyle, textPromptStyle, headingPromptStyle } from "../styles/Styles";
+import { promptStyle, headingPromptStyle } from "../styles/Styles";
 // CSS
 import "../styles/prompt-styles.css";
 
@@ -18,22 +18,22 @@ const NodeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   const [hostVolume, setHostVolume] = useState(null);
 
   const handleContainerName = (event) => {
-    const { _, value } = event.target;
+    const { value } = event.target;
     setContainerName(value);
   };
 
   const handleServiceName = (event) => {
-    const { _, value } = event.target;
+    const { value } = event.target;
     setServiceName(value);
   };
   
   const handleContainerVolume = (event) => {
-    const { _, value } = event.target;
+    const { value } = event.target;
     setContainerVolume(value);
   };
   
   const handleHostVolume = (event) => {
-    const { _, value } = event.target;
+    const { value } = event.target;
     setHostVolume(value);
   };
 

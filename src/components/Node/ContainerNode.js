@@ -1,6 +1,7 @@
 import { Tooltip, Typography, Zoom } from "@mui/material";
 import { Fragment } from "react";
 import { Handle, Position } from "react-flow-renderer";
+import { targetHandleStyling, sourceHandleStyling } from "../styles/Styles";
 import "../styles/container-node.css";
 
 function ContainerNode({ data, selected, dragging }) {
@@ -29,13 +30,13 @@ function ContainerNode({ data, selected, dragging }) {
       enterNextDelay={1000}
     >
       <div className="container-node">
-        <Handle type="source" position={Position.Top} id="a" />
-        <Handle type="source" position={Position.Left} id="b" />
+        <Handle type="source" style={sourceHandleStyling} position={Position.Top} id="a" />
+        <Handle type="source" style={sourceHandleStyling} position={Position.Left} id="b" />
         <div>
           <label htmlFor="text">{data.serviceName}</label>
         </div>
-        <Handle type="target" position={Position.Bottom} id="c" />
-        <Handle type="target" position={Position.Right} id="d" />
+        <Handle type="target" style={targetHandleStyling} position={Position.Bottom} id="c" />
+        <Handle type="target" style={targetHandleStyling} position={Position.Right} id="d" />
       </div>
     </Tooltip>
   );

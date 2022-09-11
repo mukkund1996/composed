@@ -14,12 +14,12 @@ const HostEdgeCreatePrompt = ({ open, setValue, handleClose, setError }) => {
   const [hostPort, setHostPort] = useState(null);
 
   const handleContainerPort = (event) => {
-    const { _, value } = event.target;
+    const { value } = event.target;
     setContainerPort(value);
   };
 
   const handleHostPort = (event) => {
-    const { _, value } = event.target;
+    const { value } = event.target;
     setHostPort(value);
   };
 

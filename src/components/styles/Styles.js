@@ -21,11 +21,16 @@ const buttonSizing = {
   maxHeight: "40px",
   maxWidth: "40px",
 };
+
+const targetHandleStyling = { background: "#FF9300" };
+const sourceHandleStyling = { background: "#00375B" };
 export {
   promptStyle,
   headingPromptStyle,
   composeContent,
   controlDiv,
   controlButtons,
-  buttonSizing
+  buttonSizing,
+  targetHandleStyling,
+  sourceHandleStyling,
 };
