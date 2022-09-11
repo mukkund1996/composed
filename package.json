@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:wasm": "cd wasm-parser && wasm-pack build --target web --out-dir ./wasm-build",
+    "build:wasm": "cd wasm-parser && ~/.cargo/bin/wasm-pack build --target web --out-dir ./wasm-build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

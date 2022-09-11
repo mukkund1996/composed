@@ -7,12 +7,12 @@ source "$HOME/.cargo/env"
 
 echo "Installing wasm-pack..."
 # Install wasm-pack
-cargo install wasm-pack
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -y
 
 echo "Building wasm-parser..."
 cd wasm-parser
 # Build wasm-parser 
-/vercel/.cargo/bin/wasm-pack build --out-dir ./wasm-build
+npm run build:wasm
 
 echo "Build static frontend client..."
 cd ..

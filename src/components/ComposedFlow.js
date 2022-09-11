@@ -25,7 +25,7 @@ import ComposePrompt from "./ComposePrompt/ComposePrompt.js";
 import CustomControl from "./Controls/CustomControl.js";
 
 // WASM modules
-import { init, print_string } from "wasm-parser";
+import init, { print_string } from "wasm-parser";
 
 // CSS
 import "./styles/flow-styles.css";
