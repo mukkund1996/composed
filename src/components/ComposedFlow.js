@@ -26,7 +26,7 @@ import ComposePrompt from "./ComposePrompt/ComposePrompt.js";
 import CustomControl from "./Controls/CustomControl.js";
 
 // WASM modules
-import init, { print_string } from "wasm-parser";
+import init, { generate_configuration } from "wasm-parser";
 
 // CSS
 import "./styles/flow-styles.css";
@@ -197,7 +197,7 @@ const ComposedFlow = () => {
     const stringifiedNodes = JSON.stringify(modNodes);
     const stringifiedEdges = JSON.stringify(edges);
     init().then(() => {
-      const rusty_str = print_string(stringifiedNodes, stringifiedEdges);
+      const rusty_str = generate_configuration(stringifiedNodes, stringifiedEdges);
       setComposeContent(rusty_str);
       setOpenComposePrompt(true);
     });

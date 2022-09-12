@@ -114,7 +114,7 @@ fn generate_dockercompose_yml(nodes: Vec<Node>, edges: Vec<Edge>) -> DockerCompo
 
 // Gets the string from JS client, processes and returns the desired string result
 #[wasm_bindgen]
-pub fn print_string(node_data: String, edge_data: String) -> String {
+pub fn generate_configuration(node_data: String, edge_data: String) -> String {
     let nodes: Vec<Node> = parse_nodes(&node_data);
     let edges: Vec<Edge> = parse_edges(&edge_data);
     let docker_compose_obj = generate_dockercompose_yml(nodes, edges);
