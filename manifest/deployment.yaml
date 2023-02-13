@@ -1,0 +1,21 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: composed
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: composed
+  template:
+    metadata:
+      labels:
+        app: composed
+    spec:
+      containers:
+      - name: composed
+        image: mukkundsunjii/composed
+        ports:
+        - name: web
+          containerPort: 80
+          protocol: TCP

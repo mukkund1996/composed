@@ -1,0 +1,11 @@
+# Build files
+build
+
+# Dependencies
+node_modules
+package.lock
+.git
+.DS_Store
+
+# IDE generated files
+.vscode
